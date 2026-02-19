@@ -41,10 +41,10 @@ public class MainViewModel : ReactiveObject
             Console.WriteLine("SettingsCommand 执行");
         });
         EditAccountCommand = ReactiveCommand.Create<Account>(account => { 
-            Console.WriteLine($"EditAccountCommand 执行: {account.Name}");
+            Console.WriteLine("EditAccountCommand 执行: " + account.Name);
         });
         DeleteAccountCommand = ReactiveCommand.Create<Account>(account => { 
-            Console.WriteLine($"DeleteAccountCommand 执行: {account.Name}");
+            Console.WriteLine("DeleteAccountCommand 执行: " + account.Name);
         });
         
         try
@@ -66,12 +66,12 @@ public class MainViewModel : ReactiveObject
             
             Console.WriteLine("正在创建AccountViewModel...");
             Accounts.Add(new AccountViewModel(sampleAccount));
-            Console.WriteLine($"示例账号已添加到Accounts集合，总数: {Accounts.Count}");
+            Console.WriteLine("示例账号已添加到Accounts集合，总数: " + Accounts.Count);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"MainViewModel 初始化失败: {ex.GetType().Name}: {ex.Message}");
-            Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+            Console.WriteLine("MainViewModel 初始化失败: " + ex.GetType().Name + ": " + ex.Message);
+            Console.WriteLine("堆栈跟踪: " + ex.StackTrace);
         }
         Console.WriteLine("MainViewModel 构造函数完成");
     }

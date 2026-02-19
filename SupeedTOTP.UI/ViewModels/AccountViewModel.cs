@@ -60,5 +60,35 @@ public class AccountViewModel : ReactiveObject
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"AccountViewModel 初始化失败: {ex.GetType().Name}: {ex.Message}");
-            Console.WriteLine($"堆栈跟踪: {ex.StackTrace}
+            Console.WriteLine("AccountViewModel 初始化失败: " + ex.GetType().Name + ": " + ex.Message);
+            Console.WriteLine("堆栈跟踪: " + ex.StackTrace);
+            
+            // 即使失败也设置默认值
+            _currentToken = "ERROR";
+            _remainingSeconds = 0;
+        }
+        Console.WriteLine("AccountViewModel 构造函数完成");
+    }
+    
+    public void RefreshToken()
+    {
+        try
+        {
+            Console.WriteLine("正在为账号 " + _account.Name + " 刷新令牌...");
+            CurrentToken = _totpService.GenerateTotp(_account);
+            RemainingSeconds = _totpService.GetRemainingSeconds(_account);
+            this.RaisePropertyChanged(nameof(RemainingSecondsPercentage));
+            Console.WriteLine("令牌刷新成功: " + CurrentToken + ", 剩余秒数: " + RemainingSeconds);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("刷新令牌失败: " + ex.GetType().Name + ": " + ex.Message);
+            Console.WriteLine("堆栈跟踪: " + ex.StackTrace);
+            CurrentToken = "ERROR";
+            RemainingSeconds = 0;
+        }
+    }
+    
+    // 转换运算符，用于在需要Account对象时自动转换
+    public static implicit operator Account(AccountViewModel vm) => vm.Model;
+}
