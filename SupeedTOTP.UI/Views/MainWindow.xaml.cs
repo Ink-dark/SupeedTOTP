@@ -18,16 +18,17 @@ public class MainWindow : Window
             Console.WriteLine("MainWindow.xaml 加载成功");
             
             // 添加窗口事件日志
-            this.Opened += (s, e) => Console.WriteLine("MainWindow 已打开");
+            this.Opened += (s, e) => {
+                Console.WriteLine("MainWindow 已打开");
+                Console.WriteLine($"窗口实际尺寸: {this.ClientSize.Width}x{this.ClientSize.Height}");
+            };
             this.Closing += (s, e) => Console.WriteLine("MainWindow 正在关闭");
+            this.Closed += (s, e) => Console.WriteLine("MainWindow 已关闭");
             
             // 显示窗口信息
             Console.WriteLine($"窗口标题: {this.Title}");
-            Console.WriteLine($"窗口尺寸: {this.Width}x{this.Height}");
+            Console.WriteLine($"窗口初始尺寸: {this.Width}x{this.Height}");
             
-            // 确保窗口可见
-            this.Show();
-            Console.WriteLine("MainWindow.Show() 已调用");
         }
         catch (Exception ex)
         {
@@ -36,5 +37,12 @@ public class MainWindow : Window
             throw;
         }
         Console.WriteLine("MainWindow 构造函数完成");
+    }
+    
+    // 处理关闭按钮点击事件
+    public void OnCloseButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        Console.WriteLine("关闭按钮被点击");
+        this.Close();
     }
 }
