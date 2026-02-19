@@ -140,12 +140,12 @@ SupeedTOTP 采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
 
 如有问题或建议，请通过以下方式联系：
 
-- GitHub: [https://github.com/yourusername/SupeedTOTP](https://github.com/yourusername/SupeedTOTP)
-- Email: your.email@example.com
+- GitHub: [https://github.com/Ink-dark/SupeedTOTP](https://github.com/Ink-dark/SupeedTOTP)
+- Email: moranqidarkseven@hallochat.cn
 
 ## 更新日志
 
-### v1.0.0 (2024-01-01)
+### v0.0.0 (2026-02-19)
 - 首次发布
 - 支持 TOTP 令牌生成与验证
 - 支持多种哈希算法
