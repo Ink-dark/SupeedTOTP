@@ -1,13 +1,14 @@
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
 namespace SupeedTOTP.UI.Views;
 
-// MainWindow必须是partial类，Avalonia UI 11.0需要它来生成InitializeComponent方法
-public partial class MainWindow : Window
+// 不再使用partial类，改为手动加载XAML
+public class MainWindow : Window
 {
     public MainWindow()
     {
-        // 使用自动生成的InitializeComponent方法
-        InitializeComponent();
+        // 手动加载XAML，不依赖自动生成的InitializeComponent方法
+        AvaloniaXamlLoader.Load(this);
     }
 }

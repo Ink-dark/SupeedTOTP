@@ -5,6 +5,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Avalonia UI 11.0 配置 -->
+    <AvaloniaVersion>11.0.0</AvaloniaVersion>
+    <UseWPF>false</UseWPF>
+    <UseWindowsForms>false</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,11 +16,15 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0" />
-  </ItemGroup>
+    <!-- 添加Avalonia MSBuild目标 -->
+    <PackageReference Include="Avalonia.Build.Tasks" Version="11.0.0" PrivateAssets="all" />  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SupeedTOTP.Core\SupeedTOTP.Core.csproj" />
     <ProjectReference Include="..\SupeedTOTP.Data\SupeedTOTP.Data.csproj" />
   </ItemGroup>
+
+  <!-- Avalonia UI 11.0 所需的MSBuild目标 -->
+  <Import Project="$(AvaloniaBuildTasksPackageDirectory)\build\Avalonia.Build.Tasks.targets" Condition="Exists('$(AvaloniaBuildTasksPackageDirectory)\build\Avalonia.Build.Tasks.targets')" />
 
 </Project>
