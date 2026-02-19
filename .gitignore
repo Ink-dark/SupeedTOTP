@@ -1,0 +1,39 @@
+# .NET
+*.dll
+*.exe
+*.pdb
+*.user
+*.vspscc
+*.vssscc
+*.suo
+*.cache
+*.csproj.user
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+TestResults/
+
+# Package restore
+packages/
+.nuget/
+
+# Others
+.env
+*.bak
+*.old
