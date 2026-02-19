@@ -11,7 +11,7 @@ public class TotpService
         var totp = new Totp(
             key,
             account.Period,
-            GetHashAlgorithm(account.Algorithm),
+            GetHashAlgorithmType(account.Algorithm),
             account.Digits);
         
         return totp.ComputeTotp();
@@ -23,7 +23,7 @@ public class TotpService
         var totp = new Totp(
             key,
             account.Period,
-            GetHashAlgorithm(account.Algorithm),
+            GetHashAlgorithmType(account.Algorithm),
             account.Digits);
         
         return totp.VerifyTotp(code, out long timeStepMatched, new VerificationWindow(window, window));
@@ -36,7 +36,7 @@ public class TotpService
         return totp.RemainingSeconds();
     }
     
-    private HashAlgorithmType GetHashAlgorithm(string algorithm)
+    private HashAlgorithmType GetHashAlgorithmType(string algorithm)
     {
         return algorithm.ToUpper() switch
         {
