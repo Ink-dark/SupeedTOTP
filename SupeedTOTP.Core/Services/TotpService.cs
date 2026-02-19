@@ -8,11 +8,9 @@ public class TotpService
     public string GenerateTotp(Account account)
     {
         var key = Base32Encoding.ToBytes(account.Secret);
-        var totp = new Totp(
-            key,
-            account.Period,
-            GetHashAlgorithmType(account.Algorithm),
-            account.Digits);
+        
+        // 根据Otp.NET 1.4.0版本的API，使用简单的构造函数
+        var totp = new Totp(key, account.Period, account.Digits);
         
         return totp.ComputeTotp();
     }
@@ -20,11 +18,7 @@ public class TotpService
     public bool VerifyTotp(Account account, string code, int window = 1)
     {
         var key = Base32Encoding.ToBytes(account.Secret);
-        var totp = new Totp(
-            key,
-            account.Period,
-            GetHashAlgorithmType(account.Algorithm),
-            account.Digits);
+        var totp = new Totp(key, account.Period, account.Digits);
         
         return totp.VerifyTotp(code, out long timeStepMatched, new VerificationWindow(window, window));
     }
@@ -34,16 +28,5 @@ public class TotpService
         var key = Base32Encoding.ToBytes(account.Secret);
         var totp = new Totp(key, account.Period);
         return totp.RemainingSeconds();
-    }
-    
-    private HashAlgorithmType GetHashAlgorithmType(string algorithm)
-    {
-        return algorithm.ToUpper() switch
-        {
-            "SHA1" => HashAlgorithmType.Sha1,
-            "SHA256" => HashAlgorithmType.Sha256,
-            "SHA512" => HashAlgorithmType.Sha512,
-            _ => HashAlgorithmType.Sha1
-        };
     }
 }
