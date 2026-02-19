@@ -2,6 +2,7 @@ using ReactiveUI;
 using System.Reactive;
 using SupeedTOTP.Core.Models;
 using SupeedTOTP.Core.Services;
+using System;
 
 namespace SupeedTOTP.UI.ViewModels;
 
@@ -36,22 +37,55 @@ public class AccountViewModel : ReactiveObject
     
     public AccountViewModel(Account account)
     {
-        _account = account;
-        _totpService = new TotpService();
-        
-        CopyTokenCommand = ReactiveCommand.Create(() => {
-            /* 实现复制令牌逻辑 */
-            // Clipboard.SetTextAsync(CurrentToken);
-        });
-        
-        RefreshToken();
+        Console.WriteLine($"AccountViewModel 构造函数开始: {account.Name}");
+        try
+        {
+            _account = account;
+            Console.WriteLine($"账号信息: Name={account.Name}, Issuer={account.Issuer}, Digits={account.Digits}, Period={account.Period}");
+            
+            Console.WriteLine("正在创建TotpService...");
+            _totpService = new TotpService();
+            Console.WriteLine("TotpService 创建成功");
+            
+            CopyTokenCommand = ReactiveCommand.Create(() => {
+                Console.WriteLine($"CopyTokenCommand 执行: {CurrentToken}");
+                /* 实现复制令牌逻辑 */
+                // Clipboard.SetTextAsync(CurrentToken);
+            });
+            Console.WriteLine("CopyTokenCommand 创建成功");
+            
+            Console.WriteLine("正在刷新令牌...");
+            RefreshToken();
+            Console.WriteLine($"令牌刷新完成: {CurrentToken}, 剩余秒数: {RemainingSeconds}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"AccountViewModel 初始化失败: {ex.GetType().Name}: {ex.Message}");
+            Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+            
+            // 即使失败也设置默认值
+            _currentToken = "ERROR";
+            _remainingSeconds = 0;
+        }
+        Console.WriteLine("AccountViewModel 构造函数完成");
     }
     
     public void RefreshToken()
     {
-        CurrentToken = _totpService.GenerateTotp(_account);
-        RemainingSeconds = _totpService.GetRemainingSeconds(_account);
-        this.RaisePropertyChanged(nameof(RemainingSecondsPercentage));
+        try
+        {
+            Console.WriteLine($"正在为账号 {_account.Name} 刷新令牌...");
+            CurrentToken = _totpService.GenerateTotp(_account);
+            RemainingSeconds = _totpService.GetRemainingSeconds(_account);
+            this.RaisePropertyChanged(nameof(RemainingSecondsPercentage));
+            Console.WriteLine($"令牌刷新成功: {CurrentToken}, 剩余秒数: {RemainingSeconds}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"刷新令牌失败: {ex.GetType().Name}: {ex.Message}");
+            CurrentToken = "ERROR";
+            RemainingSeconds = 0;
+        }
     }
     
     // 转换运算符，用于在需要Account对象时自动转换
