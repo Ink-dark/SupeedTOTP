@@ -69,7 +69,7 @@ SupeedTOTP/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/SupeedTOTP.git
+git clone https://github.com/Ink-dark/SupeedTOTP.git
 cd SupeedTOTP
 
 # 构建解决方案
