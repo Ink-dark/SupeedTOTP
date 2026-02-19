@@ -36,14 +36,14 @@ public class TotpService
         return totp.RemainingSeconds();
     }
     
-    private OtpHashAlgorithm GetHashAlgorithm(string algorithm)
+    private HashAlgorithmType GetHashAlgorithm(string algorithm)
     {
         return algorithm.ToUpper() switch
         {
-            "SHA1" => OtpHashAlgorithm.Sha1,
-            "SHA256" => OtpHashAlgorithm.Sha256,
-            "SHA512" => OtpHashAlgorithm.Sha512,
-            _ => OtpHashAlgorithm.Sha1
+            "SHA1" => HashAlgorithmType.Sha1,
+            "SHA256" => HashAlgorithmType.Sha256,
+            "SHA512" => HashAlgorithmType.Sha512,
+            _ => HashAlgorithmType.Sha1
         };
     }
 }
