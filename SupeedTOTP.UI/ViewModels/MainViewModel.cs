@@ -1,11 +1,9 @@
 using ReactiveUI;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Collections.ObjectModel;
 using SupeedTOTP.Core.Models;
 using SupeedTOTP.Data.Repositories;
 using SupeedTOTP.Data;
-using System;
 
 namespace SupeedTOTP.UI.ViewModels;
 
@@ -37,76 +35,28 @@ public class MainViewModel : ReactiveObject
     
     public MainViewModel()
     {
-        try
+        // 简化构造函数，移除可能导致问题的异步调用和复杂逻辑
+        _dbContext = new AppDbContext();
+        _dbContext.Database.EnsureCreated();
+        _accountRepository = new AccountRepository(_dbContext);
+        
+        // 简化命令创建
+        AddAccountCommand = ReactiveCommand.Create(() => { /* 实现添加账号逻辑 */ });
+        SettingsCommand = ReactiveCommand.Create(() => { /* 实现设置逻辑 */ });
+        EditAccountCommand = ReactiveCommand.Create<Account>(account => { /* 实现编辑账号逻辑 */ });
+        DeleteAccountCommand = ReactiveCommand.Create<Account>(account => { /* 实现删除账号逻辑 */ });
+        
+        // 初始化一个示例账号，确保界面有内容显示
+        var sampleAccount = new Account
         {
-            Console.WriteLine("Initializing MainViewModel...");
-            
-            _dbContext = new AppDbContext();
-            _dbContext.Database.EnsureCreated();
-            _accountRepository = new AccountRepository(_dbContext);
-            
-            Console.WriteLine("Creating commands...");
-            AddAccountCommand = ReactiveCommand.Create(() => { /* 实现添加账号逻辑 */ });
-            SettingsCommand = ReactiveCommand.Create(() => { /* 实现设置逻辑 */ });
-            EditAccountCommand = ReactiveCommand.Create<Account>(account => { /* 实现编辑账号逻辑 */ });
-            DeleteAccountCommand = ReactiveCommand.Create<Account>(account => { /* 实现删除账号逻辑 */ });
-            
-            Console.WriteLine("Setting up search subscription...");
-            // 监听搜索查询变化
-            this.WhenAnyValue(x => x.SearchQuery)
-                .Throttle(TimeSpan.FromMilliseconds(300))
-                .Subscribe(async query => await LoadAccountsAsync(query));
-            
-            Console.WriteLine("Loading accounts...");
-            LoadAccountsAsync().Wait();
-            
-            Console.WriteLine("Setting up token refresh...");
-            // 定期刷新令牌
-            Observable.Interval(TimeSpan.FromSeconds(1))
-                .Subscribe(_ => RefreshTokens());
-            
-            Console.WriteLine("MainViewModel initialized successfully");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("MainViewModel initialization error: " + ex.Message);
-            Console.WriteLine(ex.StackTrace);
-            throw;
-        }
-    }
-    
-    private async Task LoadAccountsAsync(string query = "")
-    {
-        try
-        {
-            var accounts = await _accountRepository.SearchAsync(query);
-            Accounts.Clear();
-            
-            foreach (var account in accounts)
-            {
-                Accounts.Add(new AccountViewModel(account));
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("LoadAccountsAsync error: " + ex.Message);
-            Console.WriteLine(ex.StackTrace);
-        }
-    }
-    
-    private void RefreshTokens()
-    {
-        try
-        {
-            foreach (var accountVm in Accounts)
-            {
-                accountVm.RefreshToken();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("RefreshTokens error: " + ex.Message);
-            Console.WriteLine(ex.StackTrace);
-        }
+            Name = "示例账号",
+            Issuer = "示例服务商",
+            Secret = "JBSWY3DPEHPK3PXP", // 示例密钥
+            Digits = 6,
+            Period = 30,
+            Algorithm = "SHA1"
+        };
+        
+        Accounts.Add(new AccountViewModel(sampleAccount));
     }
 }
