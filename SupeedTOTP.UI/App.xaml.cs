@@ -5,12 +5,18 @@ using SupeedTOTP.UI.Views;
 
 namespace SupeedTOTP.UI;
 
-// 移除partial修饰符，因为我们不再使用XAML代码生成
-public class App : Application
+// 确保App是partial类，Avalonia UI 11.0需要partial类来生成InitializeComponent方法
+public partial class App : Application
 {
+    public App()
+    {
+        // 构造函数中不需要手动调用Load，Avalonia会自动处理
+    }
+    
     public override void Initialize()
     {
-        AvaloniaXamlLoader.Load(this);
+        // Avalonia UI 11.0会自动生成InitializeComponent方法
+        InitializeComponent();
     }
 
     public override void OnFrameworkInitializationCompleted()
