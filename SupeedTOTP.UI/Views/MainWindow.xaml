@@ -1,85 +1,11 @@
-<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vm="using:SupeedTOTP.UI.ViewModels" mc:Ignorable="d" x:Class="SupeedTOTP.UI.Views.MainWindow" Title="SupeedTOTP" Width="800" Height="600">
-    <Design.DataContext>
-        <vm:MainViewModel/>
-    </Design.DataContext>
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="SupeedTOTP.UI.Views.MainWindow" Title="SupeedTOTP" Width="800" Height="600">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <!-- Header -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Spacing="10" VerticalAlignment="Center">
-            <TextBlock Text="SupeedTOTP" FontWeight="Bold" FontSize="20"/>
-            <TextBox 
-                Width="300" 
-                Watermark="搜索账号..." 
-                Text="{Binding SearchQuery, Mode=TwoWay}" 
-                Margin="0,0,10,0"/>
-            <Button 
-                Content="添加账号" 
-                Command="{Binding AddAccountCommand}" 
-                Width="100"/>
-            <Button 
-                Content="设置" 
-                Command="{Binding SettingsCommand}" 
-                Width="80"/>
+        <StackPanel Margin="20">
+            <TextBlock Text="SupeedTOTP" FontSize="24" FontWeight="Bold" Margin="0 0 0 20"/>
+            <TextBlock Text="欢迎使用TOTP令牌生成器" FontSize="16" Margin="0 0 0 10"/>
+            <TextBlock Text="当前令牌: 123456" FontSize="20" FontWeight="Bold" Margin="0 0 0 5"/>
+            <ProgressBar Value="50" Maximum="100" Height="10" Width="200" Margin="0 0 0 20"/>
+            <Button Content="测试按钮" Width="100"/>
         </StackPanel>
-        
-        <!-- Token List -->
-        <DataGrid 
-            Grid.Row="1" 
-            Items="{Binding Accounts}" 
-            SelectedItem="{Binding SelectedAccount}" 
-            AutoGenerateColumns="False" 
-            Margin="10" 
-            CanUserResizeColumns="True">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="令牌" Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                                <TextBlock 
-                                    Text="{Binding CurrentToken}" 
-                                    FontSize="18" 
-                                    FontWeight="Bold" 
-                                    HorizontalAlignment="Center" 
-                                    Margin="5"/>
-                                <ProgressBar 
-                                    Value="{Binding RemainingSecondsPercentage}" 
-                                    Maximum="100" 
-                                    Height="5" 
-                                    Width="120" 
-                                    HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="账号" Binding="{Binding Name}" Width="150"/>
-                <DataGridTextColumn Header="服务商" Binding="{Binding Issuer}" Width="150"/>
-                <DataGridTemplateColumn Header="操作" Width="Auto">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <Button 
-                                    Content="复制" 
-                                    Command="{Binding CopyTokenCommand}" 
-                                    Width="60"/>
-                                <Button 
-                                    Content="编辑" 
-                                    Command="{Binding DataContext.EditAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                                    CommandParameter="{Binding}" 
-                                    Width="60"/>
-                                <Button 
-                                    Content="删除" 
-                                    Command="{Binding DataContext.DeleteAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                                    CommandParameter="{Binding}" 
-                                    Width="60"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
     </Grid>
 </Window>

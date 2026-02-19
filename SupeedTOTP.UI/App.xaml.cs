@@ -5,7 +5,8 @@ using SupeedTOTP.UI.Views;
 
 namespace SupeedTOTP.UI;
 
-public partial class App : Application
+// 移除partial修饰符，因为我们不再使用XAML代码生成
+public class App : Application
 {
     public override void Initialize()
     {

@@ -1,7 +1,4 @@
-<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="SupeedTOTP.UI.App" xmlns:local="using:SupeedTOTP.UI">
-    <Application.DataTemplates>
-        <local:ViewLocator/>
-    </Application.DataTemplates>
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="SupeedTOTP.UI.App">
     <Application.Styles>
         <FluentTheme Mode="Light"/>
     </Application.Styles>
