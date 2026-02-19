@@ -1,4 +1,5 @@
 using ReactiveUI;
+using System.Reactive;
 using SupeedTOTP.Core.Models;
 using SupeedTOTP.Core.Services;
 
