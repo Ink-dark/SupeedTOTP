@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SupeedTOTP.Core.Models;
 using SupeedTOTP.Core.Services;
@@ -11,6 +13,8 @@ namespace SupeedTOTP.UI.ViewModels
     {
         private readonly Account _account;
         private readonly TotpService _totpService;
+        private readonly CancellationTokenSource _cts;
+        private readonly Task? _refreshTask;
         
         private string _currentToken = string.Empty;
         public string CurrentToken
@@ -59,6 +63,7 @@ namespace SupeedTOTP.UI.ViewModels
             // 初始化非空字段
             _account = account;
             _totpService = new TotpService();
+            _cts = new CancellationTokenSource();
             
             // 初始化命令
             CopyTokenCommand = new RelayCommand(CopyToken);
@@ -72,6 +77,11 @@ namespace SupeedTOTP.UI.ViewModels
                 Console.WriteLine("正在刷新令牌...");
                 RefreshToken();
                 Console.WriteLine($"令牌刷新完成: {CurrentToken}, 剩余秒数: {RemainingSeconds}");
+                
+                // 启动后台任务，定期刷新令牌和剩余秒数
+                Console.WriteLine("启动令牌刷新后台任务...");
+                _refreshTask = Task.Run(async () => await RefreshTokenPeriodicallyAsync(_cts.Token), _cts.Token);
+                Console.WriteLine("后台任务启动成功");
             }
             catch (Exception ex)
             {
@@ -83,6 +93,39 @@ namespace SupeedTOTP.UI.ViewModels
                 _remainingSeconds = 0;
             }
             Console.WriteLine("AccountViewModel 构造函数完成");
+        }
+        
+        private async Task RefreshTokenPeriodicallyAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    // 等待1秒后刷新
+                    await Task.Delay(1000, cancellationToken);
+                    
+                    // 刷新令牌和剩余秒数
+                    RefreshToken();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // 任务被取消，正常退出
+                Console.WriteLine($"账号 {_account.Name} 的令牌刷新任务已取消");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"账号 {_account.Name} 的令牌刷新任务失败: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+        
+        // 清理资源
+        public void Dispose()
+        {
+            Console.WriteLine($"AccountViewModel.Dispose() 调用: {_account.Name}");
+            _cts.Cancel();
+            _cts.Dispose();
+            _refreshTask?.Wait(1000); // 等待后台任务完成
         }
         
         public void RefreshToken()

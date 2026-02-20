@@ -40,13 +40,25 @@
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,5,0,5"/>
         </Style>
+        
+        <!-- ListBox 自定义样式 -->
+        <Style TargetType="ListBox" x:Key="CustomListBox">
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.Background" Value="White"/>
+        </Style>
     </Window.Resources>
     <Grid Background="#F5F5F5">
         <!-- 标题栏 -->
-        <Grid Background="#0078D4" Height="60">
+        <Grid Background="#F5F5F5" Height="60">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                <TextBlock Text="SupeedTOTP" FontSize="24" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text=" - TOTP令牌生成器" FontSize="16" Foreground="#E0E0E0" Margin="10,5,0,0"/>
+                <TextBlock Text="SupeedTOTP" FontSize="24" FontWeight="Bold" Foreground="#333333"/>
+                <TextBlock Text=" - TOTP令牌生成器" FontSize="16" Foreground="#666666" Margin="10,5,0,0"/>
             </StackPanel>
         </Grid>
         
@@ -72,7 +84,8 @@
             <!-- 账号列表 -->
             <ListBox x:Name="AccountsList" Grid.Row="1" Margin="20,10,20,20"
                      ItemsSource="{Binding Accounts}"
-                     SelectedItem="{Binding SelectedAccount}">
+                     SelectedItem="{Binding SelectedAccount}"
+                     Style="{StaticResource CustomListBox}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:AccountViewModel">
                         <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="0,0,0,10" CornerRadius="4">
@@ -85,7 +98,9 @@
                                 <!-- 账号信息 -->
                                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                                     <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text=" ({Binding Issuer})" FontSize="14" Foreground="#666666" Margin="5,1,0,0"/>
+                                    <TextBlock Text=" (" FontSize="14" Foreground="#666666" Margin="5,1,0,0"/>
+                                    <TextBlock Text="{Binding Issuer}" FontSize="14" Foreground="#666666"/>
+                                    <TextBlock Text=")" FontSize="14" Foreground="#666666"/>
                                 </StackPanel>
                                 
                                 <!-- 令牌信息 -->
@@ -115,6 +130,17 @@
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
