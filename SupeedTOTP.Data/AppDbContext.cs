@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SupeedTOTP.Core.Models;
+using System.IO;
 
 namespace SupeedTOTP.Data;
 
@@ -9,8 +10,8 @@ public class AppDbContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SupeedTOTP", "totp.db");
-        Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? string.Empty);
+        // 使用当前工作目录，避免沙箱环境限制
+        var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "totp.db");
         optionsBuilder.UseSqlite($"Data Source={dbPath}");
     }
     

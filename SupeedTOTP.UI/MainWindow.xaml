@@ -1,0 +1,119 @@
+<Window x:Class="SupeedTOTP.UI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SupeedTOTP.UI.Views"
+        xmlns:vm="clr-namespace:SupeedTOTP.UI.ViewModels"
+        mc:Ignorable="d"
+        Title="SupeedTOTP" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="PrimaryButton">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#106EBE"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="CopyButton">
+            <Setter Property="Background" Value="#E8E8E8"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D0D0D0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="TokenText">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F5F5F5">
+        <!-- 标题栏 -->
+        <Grid Background="#0078D4" Height="60">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="SupeedTOTP" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text=" - TOTP令牌生成器" FontSize="16" Foreground="#E0E0E0" Margin="10,5,0,0"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- 主内容区 -->
+        <Grid Margin="0,60,0,0">
+            <!-- 搜索和操作按钮 -->
+            <Grid Margin="20,20,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Margin="0,0,10,0" Padding="10" Text="搜索账号..." Foreground="#999999" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
+                <Button Grid.Column="1" Content="添加账号" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" Click="AddAccount_Click"/>
+                <Button Grid.Column="2" Content="设置" Style="{StaticResource PrimaryButton}" Click="Settings_Click"/>
+            </Grid>
+            
+            <!-- 账号列表 -->
+            <ListBox x:Name="AccountsList" Margin="20,70,20,20"
+                     ItemsSource="{Binding Accounts}"
+                     SelectedItem="{Binding SelectedAccount}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:AccountViewModel">
+                        <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="0,0,0,10" CornerRadius="4">
+                            <Grid Margin="15">
+                                <!-- 账号信息 -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text=" ({Binding Issuer})" FontSize="14" Foreground="#666666" Margin="5,1,0,0"/>
+                                </StackPanel>
+                                
+                                <!-- 令牌信息 -->
+                                <Grid Margin="0,30,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding CurrentToken}" Style="{StaticResource TokenText}"/>
+                                        <!-- 进度条 -->
+                                        <ProgressBar Value="{Binding RemainingSecondsPercentage, Mode=OneWay}" Height="8" Margin="0,5,0,0"
+                                                     Background="#E0E0E0" Foreground="#0078D4"/>
+                                        <TextBlock Text="{Binding RemainingSeconds, StringFormat='剩余时间: {0}秒'}" 
+                                                   FontSize="12" Foreground="#666666" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="复制" Style="{StaticResource CopyButton}" 
+                                            Command="{Binding CopyTokenCommand}" Margin="10,0,0,0" VerticalAlignment="Top"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            
+            <!-- 空状态提示 -->
+            <TextBlock x:Name="EmptyStateText" Text="暂无账号，请点击'添加账号'按钮添加" 
+                       FontSize="16" Foreground="#666666" HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</Window>

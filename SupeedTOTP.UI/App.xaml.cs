@@ -1,60 +1,85 @@
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using SupeedTOTP.UI.Views;
 using System;
+using System.Windows;
+using SupeedTOTP.UI.Views;
 
-namespace SupeedTOTP.UI;
-
-// 不再使用partial类，改为手动加载XAML
-public class App : Application
+namespace SupeedTOTP.UI
 {
-    public override void Initialize()
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
     {
-        Console.WriteLine("App.Initialize() 开始");
-        try
+        public App()
         {
-            // 手动加载XAML，不依赖自动生成的InitializeComponent方法
-            Console.WriteLine("开始加载App.xaml");
-            AvaloniaXamlLoader.Load(this);
-            Console.WriteLine("App.xaml 加载成功");
+            Console.WriteLine("=== SupeedTOTP Application Starting ===");
+            Console.WriteLine("App constructor called");
+            
+            // 添加应用程序事件处理
+            this.Startup += App_Startup;
+            this.Activated += (s, e) => Console.WriteLine("App Activated event fired");
+            this.Deactivated += (s, e) => Console.WriteLine("App Deactivated event fired");
+            this.Exit += (s, e) => Console.WriteLine("App Exit event fired");
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
-        catch (Exception ex)
+        
+        private void App_Startup(object sender, StartupEventArgs e)
         {
-            Console.WriteLine($"App.xaml 加载失败: {ex.GetType().Name}: {ex.Message}");
-            Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
-            throw;
-        }
-        Console.WriteLine("App.Initialize() 完成");
-    }
-
-    public override void OnFrameworkInitializationCompleted()
-    {
-        Console.WriteLine("App.OnFrameworkInitializationCompleted() 开始");
-        try
-        {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            Console.WriteLine("App Startup event fired");
+            try
             {
-                Console.WriteLine("检测到桌面应用程序生命周期");
-                Console.WriteLine("正在创建MainWindow...");
-                desktop.MainWindow = new MainWindow();
-                Console.WriteLine("MainWindow 创建成功");
-                desktop.MainWindow.Closed += (s, e) => Console.WriteLine("MainWindow 已关闭");
+                Console.WriteLine("App starting up...");
+                // 使用 App.xaml 中的 StartupUri 自动创建 MainWindow
+                Console.WriteLine("Using StartupUri to create MainWindow...");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"应用程序生命周期类型: {ApplicationLifetime?.GetType().Name ?? "null"}");
+                Console.WriteLine($"Startup error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                this.Shutdown();
             }
-
-            base.OnFrameworkInitializationCompleted();
-            Console.WriteLine("基类OnFrameworkInitializationCompleted调用完成");
         }
-        catch (Exception ex)
+        
+        private bool _isHandlingException = false;
+        
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Console.WriteLine($"OnFrameworkInitializationCompleted 失败: {ex.GetType().Name}: {ex.Message}");
-            Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
-            throw;
+            // 防止递归调用
+            if (_isHandlingException)
+            {
+                Console.WriteLine("=== Recursive exception detected, skipping handling ===");
+                e.Handled = true;
+                return;
+            }
+            
+            _isHandlingException = true;
+            
+            try
+            {
+                Console.WriteLine($"=== Unhandled Exception ===");
+                Console.WriteLine($"Exception Type: {e.Exception.GetType().FullName}");
+                Console.WriteLine($"Exception Message: {e.Exception.Message}");
+                Console.WriteLine($"Stack Trace: {e.Exception.StackTrace}");
+                
+                // 简化错误处理，避免使用 MessageBox
+                Console.WriteLine("=== Application Will Shutdown Due to Unhandled Exception ===");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in exception handler: {ex.Message}");
+            }
+            finally
+            {
+                _isHandlingException = false;
+            }
+            
+            e.Handled = true;
+            this.Shutdown();
         }
-        Console.WriteLine("App.OnFrameworkInitializationCompleted() 完成");
+        
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            Console.WriteLine("=== SupeedTOTP Application Exited ===");
+        }
     }
 }

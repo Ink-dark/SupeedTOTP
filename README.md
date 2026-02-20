@@ -33,7 +33,7 @@ SupeedTOTP 是一个基于 C# 语言开发的跨平台 TOTP（Time-based One-Tim
 
 - **开发语言**: C# 10.0+
 - **跨平台框架**: .NET 8.0
-- **UI 框架**: Avalonia UI 11.0
+- **UI 框架**: WPF (Windows Presentation Foundation)
 - **TOTP 算法库**: Otp.NET
 - **数据存储**: SQLite + Entity Framework Core
 - **加密库**: BouncyCastle
@@ -47,11 +47,11 @@ SupeedTOTP/
 │   ├── Services/             # 业务服务
 │   ├── Utilities/            # 工具类
 │   └── Interfaces/           # 接口定义
-├── SupeedTOTP.UI/            # UI 层（Avalonia）
-│   ├── Views/               # 视图
+├── SupeedTOTP.UI/            # UI 层（WPF）
 │   ├── ViewModels/          # 视图模型
-│   ├── Controls/            # 自定义控件
-│   └── Resources/           # 资源文件
+│   ├── Views/               # 视图代码文件
+│   ├── MainWindow.xaml      # 主窗口 XAML
+│   └── App.xaml             # 应用程序配置
 ├── SupeedTOTP.Data/          # 数据访问层
 │   ├── Repositories/        # 仓库
 │   └── Migrations/          # 数据库迁移
@@ -86,14 +86,8 @@ dotnet run --project SupeedTOTP.UI/SupeedTOTP.UI.csproj
 ### 发布应用
 
 ```bash
-# Windows
+# Windows (WPF 仅支持 Windows 平台)
 dotnet publish SupeedTOTP.UI/SupeedTOTP.UI.csproj -c Release -r win-x64 --self-contained true
-
-# Linux
-dotnet publish SupeedTOTP.UI/SupeedTOTP.UI.csproj -c Release -r linux-x64 --self-contained true
-
-# macOS
-dotnet publish SupeedTOTP.UI/SupeedTOTP.UI.csproj -c Release -r osx-x64 --self-contained true
 ```
 
 ## 使用指南
@@ -145,6 +139,13 @@ SupeedTOTP 采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
 
 ## 更新日志
 
+### v0.0.1 (2026-02-20)
+- 从 Avalonia UI 迁移到 WPF
+- 修复了应用程序启动崩溃问题
+- 增强了异常处理机制
+- 优化了沙箱环境兼容性
+- 改进了用户界面响应速度
+
 ### v0.0.0 (2026-02-19)
 - 首次发布
 - 支持 TOTP 令牌生成与验证
@@ -154,4 +155,4 @@ SupeedTOTP 采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
 
 ---
 
-**SupeedTOTP** - 安全、可靠的跨平台 TOTP 令牌生成器
+**SupeedTOTP** - 安全、可靠的 Windows TOTP 令牌生成器
