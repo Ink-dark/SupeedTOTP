@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:SupeedTOTP.UI.ViewModels"
         mc:Ignorable="d"
-        Title="SupeedTOTP" Height="600" Width="350"
+        Title="身份验证器 - SupeedTOTP" Height="600" Width="350"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Button" x:Key="PrimaryButton">
@@ -55,74 +55,50 @@
     </Window.Resources>
     <Grid Background="#F5F5F5">
         <!-- 标题栏 -->
-        <Grid Background="#F5F5F5" Height="60">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                <TextBlock Text="SupeedTOTP" FontSize="24" FontWeight="Bold" Foreground="#333333"/>
-                <TextBlock Text=" - TOTP令牌生成器" FontSize="16" Foreground="#666666" Margin="10,5,0,0"/>
-            </StackPanel>
+        <Grid Background="#F5F5F5" Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="⚙" FontSize="16" Background="Transparent" BorderThickness="0" Margin="10,0,0,0" Click="Settings_Click"/>
+            <TextBlock Grid.Column="1" Text="身份验证器" FontSize="18" FontWeight="Bold" Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Grid.Column="2" Content="✏" FontSize="16" Background="Transparent" BorderThickness="0" Margin="0,0,10,0" Click="EditAccounts_Click"/>
         </Grid>
         
         <!-- 主内容区 -->
-        <Grid Margin="0,60,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <!-- 搜索和操作按钮 -->
-            <Grid Grid.Row="0" Margin="20,20,20,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,10" Padding="10" Text="搜索账号..." Foreground="#999999" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
-                <Button Grid.Row="1" Grid.Column="0" Content="添加账号" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" Click="AddAccount_Click"/>
-                <Button Grid.Row="1" Grid.Column="1" Content="设置" Style="{StaticResource PrimaryButton}" Click="Settings_Click"/>
-            </Grid>
-            
+        <Grid Margin="0,50,0,0">
             <!-- 账号列表 -->
-            <ListBox x:Name="AccountsList" Grid.Row="1" Margin="20,10,20,20"
+            <ListBox x:Name="AccountsList" Margin="10,10,10,10"
                      ItemsSource="{Binding Accounts}"
                      SelectedItem="{Binding SelectedAccount}"
-                     Style="{StaticResource CustomListBox}">
+                     Style="{StaticResource CustomListBox}" Background="#F5F5F5" BorderThickness="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:AccountViewModel">
                         <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="0,0,0,10" CornerRadius="4">
                             <Grid Margin="15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 
-                                <!-- 账号信息 -->
-                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text=" (" FontSize="14" Foreground="#666666" Margin="5,1,0,0"/>
-                                    <TextBlock Text="{Binding Issuer}" FontSize="14" Foreground="#666666"/>
-                                    <TextBlock Text=")" FontSize="14" Foreground="#666666"/>
-                                </StackPanel>
+                                <!-- 服务商名称 -->
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Issuer}" FontSize="14" Foreground="#333333" FontWeight="Medium"/>
                                 
-                                <!-- 令牌信息 -->
-                                <Grid Grid.Row="1" Margin="0,15,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="{Binding CurrentToken}" Style="{StaticResource TokenText}"/>
-                                        <!-- 进度条 -->
-                                        <ProgressBar Value="{Binding RemainingSecondsPercentage, Mode=OneWay}" Height="8" Margin="0,5,0,0"
-                                                     Background="#E0E0E0" Foreground="#0078D4"/>
-                                        <TextBlock Text="{Binding RemainingSeconds, StringFormat='剩余时间: {0}秒'}" 
-                                                   FontSize="12" Foreground="#666666" Margin="0,5,0,0"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="复制" Style="{StaticResource CopyButton}" 
-                                            Command="{Binding CopyTokenCommand}" Margin="10,0,0,0" VerticalAlignment="Top"/>
-                                </Grid>
+                                <!-- 令牌 -->
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding CurrentToken}" FontSize="24" Foreground="#0078D4" FontWeight="Bold" Margin="0,5,0,5"/>
+                                
+                                <!-- 账号信息 -->
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Name}" FontSize="12" Foreground="#666666"/>
+                                
+                                <!-- 复制按钮 -->
+                                <Button Grid.Row="1" Grid.Column="1" Content="🌙" FontSize="16" Background="Transparent" BorderThickness="0" 
+                                        Command="{Binding CopyTokenCommand}" Margin="10,0,0,0" VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

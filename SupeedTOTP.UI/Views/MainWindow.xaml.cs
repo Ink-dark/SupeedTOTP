@@ -47,17 +47,21 @@ namespace SupeedTOTP.UI.Views
         }
         
         // 按钮点击事件处理
-        private void AddAccount_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.AddAccount();
-        }
-        
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OpenSettings();
         }
         
-
+        private void EditAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            // 编辑账号列表功能
+            Console.WriteLine("Edit accounts clicked");
+        }
+        
+        private void AddAccount_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddAccount();
+        }
         
         // 搜索文本框事件
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
