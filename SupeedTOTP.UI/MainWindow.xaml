@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:SupeedTOTP.UI.ViewModels"
+        xmlns:local="clr-namespace:SupeedTOTP.UI.Views"
         mc:Ignorable="d"
-        Title="身份验证器 - SupeedTOTP" Height="600" Width="350"
+        Title="身份验证器 - SupeedTOTP" Height="400" Width="320"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Button" x:Key="PrimaryButton">
@@ -52,6 +53,8 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.Background" Value="White"/>
         </Style>
+        <!-- 百分比到宽度的转换器 -->
+        <local:PercentageToWidthConverter x:Key="PercentageToWidthConverter"/>
     </Window.Resources>
     <Grid Background="#F5F5F5">
         <!-- 标题栏 -->
@@ -75,13 +78,14 @@
                      Style="{StaticResource CustomListBox}" Background="#F5F5F5" BorderThickness="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:AccountViewModel">
-                        <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="0,0,0,10" CornerRadius="4">
+                        <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="10,10,10,10" CornerRadius="4">
                             <Grid Margin="15">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -96,9 +100,17 @@
                                 <!-- 账号信息 -->
                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Name}" FontSize="12" Foreground="#666666"/>
                                 
-                                <!-- 复制按钮 -->
-                                <Button Grid.Row="1" Grid.Column="1" Content="🌙" FontSize="16" Background="Transparent" BorderThickness="0" 
-                                        Command="{Binding CopyTokenCommand}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                <!-- 电池样式倒计时 -->
+                                <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="5"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="20" Height="12" BorderBrush="#0078D4" BorderThickness="1" CornerRadius="2">
+                                        <Rectangle Width="{Binding RemainingSecondsPercentage, Converter={StaticResource PercentageToWidthConverter}, ConverterParameter=18}" Height="10" Fill="#0078D4" Margin="0" HorizontalAlignment="Left"/>
+                                    </Border>
+                                    <Border Grid.Column="1" Width="3" Height="8" Background="#0078D4" Margin="0,2,0,0" CornerRadius="1"/>
+                                </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>

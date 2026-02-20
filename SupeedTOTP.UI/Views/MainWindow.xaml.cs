@@ -1,5 +1,7 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using SupeedTOTP.UI.ViewModels;
 
@@ -80,6 +82,27 @@ namespace SupeedTOTP.UI.Views
                 textBox.Text = "搜索账号...";
                 textBox.Foreground = new SolidColorBrush(Color.FromRgb(0x99, 0x99, 0x99));
             }
+        }
+    }
+    
+    /// <summary>
+    /// 百分比到宽度的转换器
+    /// </summary>
+    public class PercentageToWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is int percentage && parameter is string widthStr && int.TryParse(widthStr, out int maxWidth))
+            {
+                // 计算实际宽度
+                return (double)percentage / 100 * maxWidth;
+            }
+            return 0;
+        }
+        
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
