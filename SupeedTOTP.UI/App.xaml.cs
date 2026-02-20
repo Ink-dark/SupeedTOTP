@@ -1,13 +1,11 @@
-using System;
 using System.Windows;
-using SupeedTOTP.UI.Views;
 
 namespace SupeedTOTP.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         public App()
         {
@@ -16,9 +14,9 @@ namespace SupeedTOTP.UI
             
             // 添加应用程序事件处理
             this.Startup += App_Startup;
-            this.Activated += (s, e) => Console.WriteLine("App Activated event fired");
-            this.Deactivated += (s, e) => Console.WriteLine("App Deactivated event fired");
-            this.Exit += (s, e) => Console.WriteLine("App Exit event fired");
+            this.Activated += (_, _) => Console.WriteLine("App Activated event fired");
+            this.Deactivated += (_, _) => Console.WriteLine("App Deactivated event fired");
+            this.Exit += (_, _) => Console.WriteLine("App Exit event fired");
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
         
@@ -39,7 +37,7 @@ namespace SupeedTOTP.UI
             }
         }
         
-        private bool _isHandlingException = false;
+        private bool _isHandlingException;
         
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -55,7 +53,7 @@ namespace SupeedTOTP.UI
             
             try
             {
-                Console.WriteLine($"=== Unhandled Exception ===");
+                Console.WriteLine("=== Unhandled Exception ===");
                 Console.WriteLine($"Exception Type: {e.Exception.GetType().FullName}");
                 Console.WriteLine($"Exception Message: {e.Exception.Message}");
                 Console.WriteLine($"Stack Trace: {e.Exception.StackTrace}");

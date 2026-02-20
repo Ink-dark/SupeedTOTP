@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SupeedTOTP.Core.Models;
-using System.IO;
 
 namespace SupeedTOTP.Data;
 

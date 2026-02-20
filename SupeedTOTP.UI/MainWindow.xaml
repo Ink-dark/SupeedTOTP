@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SupeedTOTP.UI.Views"
         xmlns:vm="clr-namespace:SupeedTOTP.UI.ViewModels"
         mc:Ignorable="d"
         Title="SupeedTOTP" Height="500" Width="600"
@@ -53,8 +52,13 @@
         
         <!-- 主内容区 -->
         <Grid Margin="0,60,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
             <!-- 搜索和操作按钮 -->
-            <Grid Margin="20,20,20,0">
+            <Grid Grid.Row="0" Margin="20,20,20,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -66,21 +70,26 @@
             </Grid>
             
             <!-- 账号列表 -->
-            <ListBox x:Name="AccountsList" Margin="20,70,20,20"
+            <ListBox x:Name="AccountsList" Grid.Row="1" Margin="20,10,20,20"
                      ItemsSource="{Binding Accounts}"
                      SelectedItem="{Binding SelectedAccount}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:AccountViewModel">
                         <Border BorderBrush="#E0E0E0" BorderThickness="1" Background="White" Margin="0,0,0,10" CornerRadius="4">
                             <Grid Margin="15">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
                                 <!-- 账号信息 -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                                     <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold"/>
                                     <TextBlock Text=" ({Binding Issuer})" FontSize="14" Foreground="#666666" Margin="5,1,0,0"/>
                                 </StackPanel>
                                 
                                 <!-- 令牌信息 -->
-                                <Grid Margin="0,30,0,0">
+                                <Grid Grid.Row="1" Margin="0,15,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
@@ -111,7 +120,7 @@
             </ListBox>
             
             <!-- 空状态提示 -->
-            <TextBlock x:Name="EmptyStateText" Text="暂无账号，请点击'添加账号'按钮添加" 
+            <TextBlock x:Name="EmptyStateText" Grid.Row="1" Text="暂无账号，请点击'添加账号'按钮添加" 
                        FontSize="16" Foreground="#666666" HorizontalAlignment="Center" 
                        VerticalAlignment="Center" Visibility="Collapsed"/>
         </Grid>
