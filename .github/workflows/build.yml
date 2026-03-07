@@ -32,13 +32,27 @@ jobs:
     - name: Run tests
       run: dotnet test --no-build --configuration Release --verbosity normal --no-restore || echo "No tests found or tests failed, continuing..."
     
+    - name: List build output (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        echo "Listing SupeedTOTP.UI build output:"
+        dir SupeedTOTP.UI\bin\Release\net8.0-windows /s
+        echo "Listing SupeedTOTP.Core build output:"
+        dir SupeedTOTP.Core\bin\Release\net8.0 /s
+        echo "Listing SupeedTOTP.Data build output:"
+        dir SupeedTOTP.Data\bin\Release\net8.0 /s
+    
     - name: Upload build artifacts
       if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4
       with:
         name: SupeedTOTP-Windows-${{ matrix.dotnet-version }}
         path: |
-          SupeedTOTP.UI/bin/Release/net8.0-windows/
-          SupeedTOTP.Core/bin/Release/net8.0/
-          SupeedTOTP.Data/bin/Release/net8.0/
+          SupeedTOTP.UI/bin/Release/net8.0-windows/*.exe
+          SupeedTOTP.UI/bin/Release/net8.0-windows/*.dll
+          SupeedTOTP.UI/bin/Release/net8.0-windows/*.json
+          SupeedTOTP.UI/bin/Release/net8.0-windows/*.config
+          SupeedTOTP.Core/bin/Release/net8.0/*.dll
+          SupeedTOTP.Data/bin/Release/net8.0/*.dll
+        if-no-files-found: warn
         retention-days: 7
