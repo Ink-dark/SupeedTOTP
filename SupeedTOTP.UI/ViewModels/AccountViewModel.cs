@@ -9,12 +9,13 @@ using SupeedTOTP.Core.Services;
 
 namespace SupeedTOTP.UI.ViewModels
 {
-    public class AccountViewModel : INotifyPropertyChanged
+    public class AccountViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly Account _account;
         private readonly TotpService _totpService;
         private readonly CancellationTokenSource _cts;
         private readonly Task? _refreshTask;
+        private bool _disposed = false;
         
         private string _currentToken = string.Empty;
         public string CurrentToken
@@ -119,13 +120,25 @@ namespace SupeedTOTP.UI.ViewModels
             }
         }
         
-        // 清理资源
         public void Dispose()
         {
-            Console.WriteLine($"AccountViewModel.Dispose() 调用: {_account.Name}");
-            _cts.Cancel();
-            _cts.Dispose();
-            _refreshTask?.Wait(1000); // 等待后台任务完成
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Console.WriteLine($"AccountViewModel.Dispose() 调用: {_account.Name}");
+                    _cts.Cancel();
+                    _cts.Dispose();
+                    _refreshTask?.Wait(1000);
+                }
+                _disposed = true;
+            }
         }
         
         public void RefreshToken()

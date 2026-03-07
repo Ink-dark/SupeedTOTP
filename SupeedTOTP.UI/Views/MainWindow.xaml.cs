@@ -1,8 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 using SupeedTOTP.UI.ViewModels;
 
 namespace SupeedTOTP.UI.Views
@@ -60,29 +58,7 @@ namespace SupeedTOTP.UI.Views
             Console.WriteLine("Edit accounts clicked");
         }
         
-        private void AddAccount_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.AddAccount();
-        }
-        
-        // 搜索文本框事件
-        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox && textBox.Text == "搜索账号...")
-            {
-                textBox.Text = string.Empty;
-                textBox.Foreground = new SolidColorBrush(Colors.Black);
-            }
-        }
-        
-        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox && string.IsNullOrWhiteSpace(textBox.Text))
-            {
-                textBox.Text = "搜索账号...";
-                textBox.Foreground = new SolidColorBrush(Color.FromRgb(0x99, 0x99, 0x99));
-            }
-        }
+
     }
     
     /// <summary>
@@ -90,7 +66,7 @@ namespace SupeedTOTP.UI.Views
     /// </summary>
     public class PercentageToWidthConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
             if (value is int percentage && parameter is string widthStr && int.TryParse(widthStr, out int maxWidth))
             {
@@ -100,7 +76,7 @@ namespace SupeedTOTP.UI.Views
             return 0;
         }
         
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }
